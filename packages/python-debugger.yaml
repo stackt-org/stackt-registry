@@ -1,0 +1,23 @@
+name: python-debugger
+description: Python debugging with Debugpy
+source:
+  id: debugpy@1.6.7
+  download:
+    - target: [linux_x64, darwin_x64, win32]
+      files:
+        debugpy: "https://github.com/microsoft/debugpy/releases/download/v{{ version }}/debugpy-{{ version }}-{{ target }}.tar.gz"
+exec_commands:
+  python: "python -m debugpy --wait-for-client --port 5678 ${file}"
+dap_config:
+  adapters:
+    python:
+      type: executable
+      command: "${install_dir}/packages/debugpy/venv/bin/python"
+      args: ["-m", "debugpy.adapter"]
+  configurations:
+    python:
+      - type: python
+        request: launch
+        name: "Launch File"
+        program: "${file}"
+        pythonPath: "${pythonPath}"
