@@ -1,0 +1,61 @@
+---
+name: codelldb
+description: LLDB Debugger Adapter
+homepage: https://github.com/vadimcn/codelldb
+licenses:
+  - MIT
+languages:
+  - C
+  - C++
+  - Rust
+categories:
+  - Debugger
+
+source:
+  id: pkg:github/vadimcn/codelldb@v1.9.0
+  asset:
+    - target: linux_x64
+      file: codelldb-linux-x86_64.vsix
+      bin: codelldb
+    - target: win_x64
+      file: codelldb-win32-x86_64.vsix
+      bin: codelldb.exe
+    # Add other platforms as needed
+
+dap:
+  adapters:
+    codelldb:
+      type: server
+      port: "{{port}}"
+      executable:
+        command: "{{stackt}}/bin/codelldb"
+        args: ["--port", "{{port}}"]
+        detached: "{{is_windows ? false : true}}"
+  configurations:
+    c:
+      - name: Launch
+        type: codelldb
+        request: launch
+        program:
+          handler: input
+          prompt: "Path to executable"
+          default: "{{cwd}}/bin/program"
+          input_type: file
+        cwd: "{{workspaceFolder}}"
+        stopOnEntry: false
+        args: []
+    cpp: "@c" # Inherits C config
+    rust:
+      - name: Launch
+        type: codelldb
+        request: launch
+        program:
+          handler: input
+          prompt: "Path to executable"
+          default: "{{cwd}}/bin/program"
+          input_type: file
+        cwd: "{{workspaceFolder}}"
+        stopOnEntry: false
+        args: []
+        initCommands:
+          handler: rust_init_commands # Predefined handler for Rust setup

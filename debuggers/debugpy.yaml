@@ -1,0 +1,27 @@
+---
+name: debugpy
+description: Python Debug Adapter
+homepage: https://github.com/microsoft/debugpy
+licenses:
+  - MIT
+languages:
+  - Python
+categories:
+  - Debugger
+
+source:
+  id: pkg:pypi/debugpy
+  # PyPI or direct download assets
+
+dap:
+  adapters:
+    python:
+      type: executable
+      command: "{{stackt}}/packages/debugpy/venv/scripts/python"
+      args: ["-m", "debugpy.adapter"]
+  configurations:
+    python:
+      - type: python
+        request: launch
+        name: Launch file
+        program: "${file}"

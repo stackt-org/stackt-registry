@@ -1,0 +1,42 @@
+---
+name: netcoredbg
+description: .NET Core Debugger
+homepage: https://github.com/Samsung/netcoredbg
+licenses:
+  - MIT
+languages:
+  - C#
+  - F#
+  - VB.NET
+categories:
+  - Debugger
+
+source:
+  id: pkg:github/Samsung/netcoredbg@v1.5.0
+  asset:
+    - target: linux_x64
+      file: netcoredbg-linux-amd64.tar.gz
+      bin: netcoredbg
+    - target: win_x64
+      file: netcoredbg-windows-amd64.zip
+      bin: netcoredbg.exe
+    # Add other platforms as needed
+
+dap:
+  adapters:
+    coreclr:
+      type: executable
+      command: "{{stackt}}/bin/netcoredbg"
+      args: ["--interpreter=vscode"]
+  configurations:
+    cs:
+      - type: coreclr
+        name: launch - netcoredbg
+        request: launch
+        program:
+          handler: input
+          prompt: "Path to DLL"
+          default: "{{cwd}}/bin/Program.exe"
+          input_type: file
+    fsharp: "@cs" # Inherits C# config
+    vb: "@cs" # Inherits C# config
